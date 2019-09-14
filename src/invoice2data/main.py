@@ -35,7 +35,7 @@ input_mapping = {
 output_mapping = {'csv': to_csv, 'json': to_json, 'xml': to_xml, 'none': None}
 
 
-def extract_data(invoicefile, templates=None, input_module=pdftotext, method=None):
+def extract_data(invoicefile, templates=None, input_module=pdftotext, method=None, ocr_text=None):
     """Extracts structured data from PDF/image invoices.
 
     This function uses the text extracted from a PDF file or image and
@@ -80,11 +80,14 @@ def extract_data(invoicefile, templates=None, input_module=pdftotext, method=Non
     if templates is None:
         templates = read_templates()
 
-    # print(templates[0])
-    extracted_str = input_module.to_text(invoicefile)
+    if ocr_text==None:
+        # print(templates[0])
+        extracted_str = input_module.to_text(invoicefile)
 
-    if isinstance(extracted_str, bytes):
-        extracted_str = extracted_str.decode("utf-8")
+        if isinstance(extracted_str, bytes):
+            extracted_str = extracted_str.decode("utf-8")
+    else:
+        extracted_str = ocr_text
 
     logger.debug('START pdftotext result ===========================')
     logger.debug(extracted_str)
